@@ -147,7 +147,8 @@ static VALUE method_delete(VALUE self, VALUE path, VALUE version) {
 }
 
 static VALUE method_get(VALUE self, VALUE path) {
-  char data[1024];
+  /* ZK 3.0.1 API maximum request size = 1MB */
+  char data[1024 * 1024]; 
   int data_len = sizeof(data);
 
   struct Stat stat;

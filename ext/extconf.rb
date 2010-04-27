@@ -1,4 +1,3 @@
-	
 require 'mkmf'
 require 'rbconfig'
 
@@ -17,39 +16,17 @@ if ENV['DEBUG']
   $EXTRA_CONF = " --enable-debug"
 end
 
-$includes = " -I#{HERE}/include -I/usr/local/include/c-client-src"
-$libraries = " -L#{HERE}/lib -L/usr/local/lib"
+# Specify the zookeeper library location here. 
+ZKINCLUDES="-I/usr/local/include/c-client-src"
+ZKLIBS="-L/usr/local/lib"
+
+$includes = " -I#{HERE}/include #{ZKINCLUDES}"
+$libraries = " -L#{HERE}/lib #{ZKLIBS}"
+
 $CFLAGS = "#{$includes} #{$libraries} #{$CFLAGS}"
 $LDFLAGS = "#{$libraries} #{$LDFLAGS}"
 $LIBPATH = ["#{HERE}/lib"]
 $DEFLIBPATH = []
-
-#Dir.chdir(HERE) do
-#  if File.exist?("lib")
-#    puts "Zkc already built; run 'rake clean' first if you need to rebuild."
-#  else
-#    puts "Building zkc."
-#    puts(cmd = "tar xzf #{BUNDLE} 2>&1")
-#    raise "'#{cmd}' failed" unless system(cmd)
-
-#    Dir.chdir(BUNDLE_PATH) do        
-#      puts(cmd = "env CFLAGS='-fPIC #{$CFLAGS}' LDFLAGS='-fPIC #{$LDFLAGS}' ./configure --prefix=#{HERE} --without-cppunit --disable-shared --disable-dependency-tracking #{$EXTRA_CONF} 2>&1")
-#      raise "'#{cmd}' failed" unless system(cmd)
-#      puts(cmd = "make CXXFLAGS='#{$CXXFLAGS}' || true 2>&1")
-#      raise "'#{cmd}' failed" unless system(cmd)
-#      puts(cmd = "make install || true 2>&1")
-#      raise "'#{cmd}' failed" unless system(cmd)
-#    end
-
-#    system("rm -rf #{BUNDLE_PATH}") unless ENV['DEBUG'] or ENV['DEV']
-#  end
-#end
-
-# Absolutely prevent the linker from picking up any other zookeeper_mt
-#Dir.chdir("#{HERE}/lib") do
-#  system("cp -f libzookeeper_mt.a libzookeeper_mt_gem.a") 
-#  system("cp -f libzookeeper_mt.la libzookeeper_mt_gem.la") 
-#end
 
 $LIBS << " -lzookeeper_mt"
 
